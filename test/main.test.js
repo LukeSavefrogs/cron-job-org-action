@@ -80,7 +80,7 @@ describe('the action', () => {
         timezone: 'Europe/Rome',
         jobs: [
           '- title: Schedule run',
-          '  url: /api/artisan/schedule/process',
+          '  url: /cron/schedule',
           '- title: Report',
           '  url: https://reports.example.com/run',
           '  schedule: "0 7 * * MON"',
@@ -94,7 +94,7 @@ describe('the action', () => {
     const [folder] = api.folders;
     const [schedule, report] = api.jobs;
     assert.equal(folder.title, '(Preview) PR-7');
-    assert.equal(schedule.url, 'https://pr-7.example.com/api/artisan/schedule/process');
+    assert.equal(schedule.url, 'https://pr-7.example.com/cron/schedule');
     assert.equal(schedule.requestMethod, 1);
     assert.deepEqual(schedule.extendedData.headers, { 'X-Cron-Token': 's3cr"et: #token' });
     assert.deepEqual(schedule.schedule.wdays, [1, 2, 3, 4, 5]);

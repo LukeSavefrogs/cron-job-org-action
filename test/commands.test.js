@@ -12,14 +12,14 @@ const NOW = Date.UTC(2026, 10, 14, 21, 58);
 const JOBS = [
   {
     title: 'Schedule run',
-    url: 'https://pr-42.example.com/api/artisan/schedule/process',
+    url: 'https://pr-42.example.com/cron/schedule',
     method: 'POST',
     schedule: '*/5 8-22 * * 1-5',
     headers: { 'X-Cron-Token': 'first-token' },
   },
   {
     title: 'Queue run',
-    url: 'https://pr-42.example.com/api/artisan/queue/process',
+    url: 'https://pr-42.example.com/cron/queue',
     method: 'POST',
     schedule: '*/5 8-22 * * 1-5',
     headers: { 'X-Cron-Token': 'first-token' },
@@ -76,7 +76,7 @@ describe('commands', () => {
       );
 
       const [schedule] = api.jobs;
-      assert.equal(schedule.url, 'https://pr-42.example.com/api/artisan/schedule/process');
+      assert.equal(schedule.url, 'https://pr-42.example.com/cron/schedule');
       assert.equal(schedule.enabled, true);
       assert.equal(schedule.requestMethod, 1);
       assert.deepEqual(schedule.extendedData, { headers: { 'X-Cron-Token': 'first-token' }, body: '' });
