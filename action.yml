@@ -1,5 +1,5 @@
 name: "cron-job.org folder sync"
-description: "Create, update and delete the cron jobs of a cron-job.org folder, e.g. for each preview environment"
+description: "Keep the cron jobs of a cron-job.org folder in sync with a list: create, update and delete them"
 author: "LukeSavefrogs"
 branding:
   icon: clock
