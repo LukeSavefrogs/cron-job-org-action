@@ -75,6 +75,19 @@ export function setOutput(name, value, env = process.env) {
 }
 
 /**
+ * Appends Markdown to the summary of the step, shown on the page of the workflow run (through the file named by
+ * `GITHUB_STEP_SUMMARY`; nothing happens outside GitHub Actions).
+ *
+ * @param {string} markdown
+ * @param {NodeJS.ProcessEnv} [env]
+ */
+export function appendSummary(markdown, env = process.env) {
+  if (env.GITHUB_STEP_SUMMARY) {
+    appendFileSync(env.GITHUB_STEP_SUMMARY, `${markdown}${EOL}`, { encoding: 'utf8' });
+  }
+}
+
+/**
  * @param {string} message
  */
 export function info(message) {
