@@ -93,6 +93,8 @@ export class CronJobOrgClient {
     this.log = log;
     /** @type {Map<string, number[]>} Times of the latest requests, by rate limit. */
     this.history = new Map();
+    /** Number of requests sent, retries included (they count towards the daily limit of the API key). */
+    this.requestCount = 0;
   }
 
   /** @returns {Promise<Array<{ folderId: number, title: string }>>} */
@@ -170,6 +172,7 @@ export class CronJobOrgClient {
       await this.waitForRateLimits(method, path);
 
       let response;
+      this.requestCount++;
       try {
         response = await fetch(`${this.apiUrl}${path}`, {
           method,
