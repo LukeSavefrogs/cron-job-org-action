@@ -12,10 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      major-version: ${{ steps.update-tag.outputs.major-version }}
+      release-id: ${{ steps.release.outputs.id }}
     steps:
     - uses: actions/checkout@v7
 
     - name: Get major version num and update tag
+      id: update-tag
       run: |
         VERSION=${GITHUB_REF#refs/tags/}
         MAJOR=${VERSION%%.*}
@@ -23,3 +27,12 @@ jobs:
         git config --global user.email 'LukeSavefrogs@users.noreply.github.com'
         git tag -fa "${MAJOR}" -m 'Update major version tag'
         git push origin "${MAJOR}" --force
+
+        echo "major-version=$MAJOR" >> "$GITHUB_OUTPUT"
+
+    - uses: ncipollo/release-action@v1
+      id: release
+      with:
+        tag: ${{ steps.update-tag.outputs.major-version }}
+        generateReleaseNotes: false
+        makeLatest: false
