@@ -106,31 +106,31 @@ matching folders:
 
 All the commands:
 
-| Input | Description | Default |
-| --- | --- | --- |
-| `api-key` | API key of cron-job.org. **Required.** | |
-| `command` | `apply` (create or update the jobs of a folder), `delete` (delete folders and their jobs) or `list` (list the folders). | `apply` |
-| `folder` | `apply`: title of the folder. `delete`: titles of the folders, one per line, where `*` matches any characters. At most 128 characters. | |
-| `dry-run` | `apply` and `delete`: only read, and report what would change. | `false` |
-| `api-url` | Endpoint of the API, e.g. of a self-hosted cron-job.org. | `https://api.cron-job.org` |
+| Input | Description | Required | Default |
+| --- | --- | --- | --- |
+| `api-key` | API key of cron-job.org. | **Yes** | |
+| `command` | `apply` (create or update the jobs of a folder), `delete` (delete folders and their jobs) or `list` (list the folders). | No | `apply` |
+| `folder` | `apply`: title of the folder. `delete`: titles of the folders, one per line, where `*` matches any characters. At most 128 characters. | No | |
+| `dry-run` | `apply` and `delete`: only read, and report what would change. | No | `false` |
+| `api-url` | Endpoint of the API, e.g. of a self-hosted cron-job.org. | No | `https://api.cron-job.org` |
 
 `apply` only:
 
-| Input | Description | Default |
-| --- | --- | --- |
-| `jobs` | The jobs of the folder, as a YAML (or JSON) list: see [Jobs](#jobs). **Required.** | |
-| `base-url` | URL prepended to the relative `url` of the jobs (e.g. `/health`). | |
-| `schedule` | Crontab expression of the jobs that do not set their own. | |
-| `method` | HTTP method of the jobs that do not set their own. | `GET` |
-| `headers` | Request headers of every job, one `Name: value` per line (see [Secrets](#secrets)). | |
-| `timezone` | Time zone of the schedules of the jobs that do not set their own. | `UTC` |
-| `prune` | Delete the jobs of the folder that are not listed in `jobs`. | `true` |
+| Input | Description | Required | Default |
+| --- | --- | --- | --- |
+| `jobs` | The jobs of the folder, as a YAML (or JSON) list: see [Jobs](#jobs). | **Yes** | |
+| `base-url` | URL prepended to the relative `url` of the jobs (e.g. `/health`). | No | |
+| `schedule` | Crontab expression of the jobs that do not set their own. | No | |
+| `method` | HTTP method of the jobs that do not set their own. | No | `GET` |
+| `headers` | Request headers of every job, one `Name: value` per line (see [Secrets](#secrets)). | No | |
+| `timezone` | Time zone of the schedules of the jobs that do not set their own. | No | `UTC` |
+| `prune` | Delete the jobs of the folder that are not listed in `jobs`. | No | `true` |
 
 `delete` only:
 
-| Input | Description | Default |
-| --- | --- | --- |
-| `exclude` | Titles of the folders to keep, one per line, where `*` matches any characters. | |
+| Input | Description | Required | Default |
+| --- | --- | --- | --- |
+| `exclude` | Titles of the folders to keep, one per line, where `*` matches any characters. | No | |
 
 The inputs and the jobs are validated before any request, so a mistake changes nothing.
 
@@ -149,22 +149,22 @@ With `dry-run`, the outputs describe what would change.
 
 `jobs` is a YAML list (JSON works too, since it is YAML). Each job has these fields:
 
-| Field | Description | Default |
-| --- | --- | --- |
-| `title` | Title of the job, unique within the folder: it identifies the job between runs. **Required.** | |
-| `url` | URL called by the job (HTTP or HTTPS), or a path relative to `base-url`. **Required.** | |
-| `schedule` | When the job runs: a crontab expression (see [Schedules](#schedules)), or a schedule object of the API, such as `{minutes: [0, 30], hours: [-1]}` (the missing fields allow every value). **Required**, unless set by the `schedule` input. | the `schedule` input |
-| `timezone` | Time zone of the schedule (e.g. `Europe/Rome`). | the `timezone` input |
-| `expiresAt` | Date after which the job no longer runs, as a number in the `YYYYMMDDhhmmss` format, in the time zone of the job; `0` for never. | `0` |
-| `enabled` | Whether the job runs. | `true` |
-| `method` | HTTP method: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS`, `TRACE` or `CONNECT`. | the `method` input, or `GET` |
-| `headers` | Request headers, as a map of texts. | the `headers` input |
-| `body` | Request body, as a text. | empty |
-| `timeout` | Timeout of the request, in seconds (`-1`: the default one of cron-job.org). | `-1` |
-| `saveResponses` | Whether cron-job.org saves the headers and the body of the responses. | `false` |
-| `redirectSuccess` | Whether the 3xx responses (redirects) count as successes. | `false` |
-| `auth` | HTTP basic authentication: `{user: ..., password: ...}`. | none |
-| `notification` | [Notification settings](https://docs.cron-job.org/rest-api.html#jobnotificationsettings) of the API, e.g. `{onFailure: true, onFailureCount: 3}`. | unchanged |
+| Field | Description | Required | Default |
+| --- | --- | --- | --- |
+| `title` | Title of the job, unique within the folder: it identifies the job between runs. | **Yes** | |
+| `url` | URL called by the job (HTTP or HTTPS), or a path relative to `base-url`. | **Yes** | |
+| `schedule` | When the job runs: a crontab expression (see [Schedules](#schedules)), or a schedule object of the API, such as `{minutes: [0, 30], hours: [-1]}` (the missing fields allow every value). | **Yes**, unless set by the `schedule` input | the `schedule` input |
+| `timezone` | Time zone of the schedule (e.g. `Europe/Rome`). | No | the `timezone` input |
+| `expiresAt` | Date after which the job no longer runs, as a number in the `YYYYMMDDhhmmss` format, in the time zone of the job; `0` for never. | No | `0` |
+| `enabled` | Whether the job runs. | No | `true` |
+| `method` | HTTP method: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS`, `TRACE` or `CONNECT`. | No | the `method` input, or `GET` |
+| `headers` | Request headers, as a map of texts. | No | the `headers` input |
+| `body` | Request body, as a text. | No | empty |
+| `timeout` | Timeout of the request, in seconds (`-1`: the default one of cron-job.org). | No | `-1` |
+| `saveResponses` | Whether cron-job.org saves the headers and the body of the responses. | No | `false` |
+| `redirectSuccess` | Whether the 3xx responses (redirects) count as successes. | No | `false` |
+| `auth` | HTTP basic authentication: `{user: ..., password: ...}`. | No | none |
+| `notification` | [Notification settings](https://docs.cron-job.org/rest-api.html#jobnotificationsettings) of the API, e.g. `{onFailure: true, onFailureCount: 3}`. | No | unchanged |
 
 ### Settings shared by every job
 
