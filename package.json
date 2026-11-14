@@ -1,0 +1,14 @@
+{
+  "name": "cron-job-org-action",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GitHub Action creating, updating and deleting the cron jobs of a cron-job.org folder",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

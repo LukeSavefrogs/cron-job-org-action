@@ -1,0 +1,54 @@
+name: "cron-job.org folder sync"
+description: "Create, update and delete the cron jobs of a cron-job.org folder, e.g. for each preview environment"
+author: "LukeSavefrogs"
+branding:
+  icon: clock
+  color: blue
+
+inputs:
+  api-key:
+    description: "API key of cron-job.org (Console → Settings → API): pass it from a secret."
+    required: true
+  command:
+    description: >-
+      `apply`: create the folder if needed, create or update its jobs (identified by their title) and, with `prune`,
+      delete the other jobs of the folder. `delete`: delete the folders (one per line) and their jobs. `list`: list the
+      folders of the account in the `folders` output.
+    required: false
+    default: "apply"
+  folder:
+    description: "Title of the folder (`apply`), or titles of the folders, one per line (`delete`). At most 128 characters."
+    required: false
+    default: ""
+  jobs:
+    description: >-
+      `apply` only: JSON array of the jobs of the folder. Each job needs a `title`, a `url` and a `schedule` (a crontab
+      expression such as `*/5 8-22 * * 1-5`); see the README for the other fields.
+    required: false
+    default: ""
+  timezone:
+    description: "`apply` only: time zone of the schedules of the jobs that do not set their own (e.g. `Europe/Rome`)."
+    required: false
+    default: "UTC"
+  prune:
+    description: "`apply` only: delete the jobs of the folder that are not listed in `jobs`."
+    required: false
+    default: "true"
+  api-url:
+    description: "Endpoint of the API (e.g. of a self-hosted cron-job.org)."
+    required: false
+    default: "https://api.cron-job.org"
+
+outputs:
+  folder-id:
+    description: "`apply`: identifier of the folder."
+  job-ids:
+    description: '`apply`: JSON object mapping the title of each job to its identifier (e.g. `{"Ping": 12345}`).'
+  folders:
+    description: >-
+      `delete`: JSON array of the deleted folders; `list`: JSON array of every folder of the account. Each folder is
+      an object with its `folderId` and `title`.
+
+runs:
+  using: "node24"
+  main: "src/index.js"
